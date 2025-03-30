@@ -7,12 +7,12 @@ SELECT Autores.nombre, COUNT(Articulos_Autores.id_articulo) AS cantidad_articulo
 JOIN Articulos_Autores ON Autores.rut = Articulos_Autores.rut_autor GROUP BY Autores.nombre;
 
 -- Obtener los títulos de los artículos que tienen más de un tópico asignado
-SELECT Articulos.titulo FROM Articulos JOIN Articulos_Topicos ON Articulos.id_articulo = Articulos_Topicos.id_articulo
-GROUP BY Articulos.id_articulo, Articulos.titulo HAVING COUNT(Articulos_Topicos.id_topico) > 1;
+SELECT Articulos.titulo FROM Articulos JOIN Articulos_Topicos ON Articulos.id = Articulos_Topicos.id_articulo
+GROUP BY Articulos.id, Articulos.titulo HAVING COUNT(Articulos_Topicos.id_topico) > 1;
 
 -- Mostrar título del artículo y datos del autor para artículos con 'Software' en el título
 SELECT Articulos.titulo, Autores.* FROM Articulos
-JOIN Articulos_Autores ON Articulos.id_articulo = Articulos_Autores.id_articulo
+JOIN Articulos_Autores ON Articulos.id = Articulos_Autores.id_articulo
 JOIN Autores ON Articulos_Autores.rut_autor = Autores.rut WHERE Articulos.titulo ILIKE '%Software%';
 
 -- Obtener el nombre y cantidad de artículos asignados a cada revisor
@@ -25,7 +25,7 @@ GROUP BY Revisores.nombre HAVING COUNT(Articulos_Revisores.id_articulo) > 3;
 
 -- Obtener los títulos de los artículos y revisores asignados si contienen 'Gestión'
 SELECT Articulos.titulo, Revisores.nombre FROM Articulos
-JOIN Articulos_Revisores ON Articulos.id_articulo = Articulos_Revisores.id_articulo
+JOIN Articulos_Revisores ON Articulos.id = Articulos_Revisores.id_articulo
 JOIN Revisores ON Articulos_Revisores.rut_revisor = Revisores.rut WHERE Articulos.titulo ILIKE '%Gestión%';
 
 -- Obtener la cantidad de revisores especialistas en cada tópico
@@ -37,6 +37,6 @@ GROUP BY Topicos.nombre;
 SELECT titulo, fecha_envio FROM Articulos ORDER BY fecha_envio ASC LIMIT 10;
 
 -- Obtener los nombres de los artículos cuyos revisores participan en 3 o más artículos
-SELECT DISTINCT Articulos.titulo FROM Articulos JOIN Articulos_Revisores ON Articulos.id_articulo = Articulos_Revisores.id_articulo
+SELECT DISTINCT Articulos.titulo FROM Articulos JOIN Articulos_Revisores ON Articulos.id = Articulos_Revisores.id_articulo
 WHERE Articulos_Revisores.rut_revisor IN (SELECT rut_revisor FROM Articulos_Revisores
 GROUP BY rut_revisor HAVING COUNT(id_articulo) >= 3);
