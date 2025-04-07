@@ -4,12 +4,13 @@ import psycopg2
 import random
 from os import getenv
 
+load_dotenv()
+
 DATABASE = getenv('DATABASE')
 USER = getenv('USER')
 PASSWORD = getenv('PASSWORD')
 HOST = getenv('HOST')
-PORT = getenv("5432")
-
+PORT = getenv('PORT')
 
 def generar_rut():
     dv = random.randint(0,10)
