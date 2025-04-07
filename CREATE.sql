@@ -51,12 +51,5 @@ CREATE TABLE Articulos_Revisores (
     rut_revisor VARCHAR(12) NOT NULL,
     PRIMARY KEY (id_articulo, rut_revisor),
     FOREIGN KEY (id_articulo) REFERENCES Articulos(id) ON DELETE CASCADE,
-    FOREIGN KEY (rut_revisor) REFERENCES Usuarios(rut) ON DELETE CASCADE,
-    CONSTRAINT autor_no_revisor CHECK (
-        rut_revisor NOT IN (
-            SELECT rut_autor
-            FROM Articulos_Autores
-            WHERE Articulos_Autores.id_articulo = Articulos_Revisores.id_articulo
-        )
-    )
+    FOREIGN KEY (rut_revisor) REFERENCES Usuarios(rut) ON DELETE CASCADE
 );
