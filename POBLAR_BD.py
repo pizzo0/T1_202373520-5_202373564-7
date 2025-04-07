@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from faker import Faker
 import psycopg2
 import random
+from time import time
 from os import getenv
 
 load_dotenv()
@@ -33,7 +34,7 @@ with open("CREATE.sql",'r') as archivo:
     db.execute(archivo.read())
 
 usuarios = [] # (rut,nombre,email)
-for _ in range(100):
+for _ in range(300):
     rut = generar_rut()
     nombre = faker.name()
     email = faker.unique.email()
@@ -42,7 +43,7 @@ for _ in range(100):
     db.execute('INSERT INTO Usuarios (rut,nombre,email) VALUES (%s,%s,%s)', (rut, nombre, email))
 
 topicos = [] #(id,nombre)
-for _ in range(15):
+for _ in range(30):
     nombre = faker.unique.job()
     
     db.execute('INSERT INTO Topicos (nombre) VALUES (%s) RETURNING id', (nombre,))
@@ -62,7 +63,7 @@ for rut,_,_ in usuarios:
     
     usuarios_especialidades.append((rut,especialidades))
 
-for _ in range(400):
+for _ in range(1000):
     titulo = faker.sentence(nb_words=6)
     resumen = faker.text(max_nb_chars=150)
     
@@ -81,7 +82,12 @@ for _ in range(400):
         db.execute("INSERT INTO Articulos_Autores (id_articulo,rut_autor) VALUES (%s,%s)", (id_articulo,rut))
     
     revisores_articulo = []
+    inicio = time()
     while len(revisores_articulo) < 3:
+        if time()-inicio > 3:
+            print("skip...")
+            break
+        
         revisor = random.choice(usuarios)
         
         if revisor[0] in [autor[0] for autor in autores_articulo] or revisor[0] in [revisor_articulo[0] for revisor_articulo in revisores_articulo]:
