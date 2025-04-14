@@ -50,6 +50,7 @@ if CREAR_DESDE_CERO:
 
 
 # USUARIOS
+print('CREANDO USUARIOS')
 usuarios = [] # (rut,nombre,email)
 for _ in range(NUM_USUARIOS):
     rut = generar_rut()
@@ -60,6 +61,7 @@ for _ in range(NUM_USUARIOS):
     db.execute('INSERT INTO Usuarios (rut,nombre,email) VALUES (%s,%s,%s)', (rut, nombre, email))
 
 # TOPICOS
+print('CREANDO TOPICOS')
 topicos = [] #(id,nombre)
 for _ in range(NUM_TOPICOS):
     nombre = faker.unique.job()
@@ -70,6 +72,7 @@ for _ in range(NUM_TOPICOS):
     topicos.append((id,nombre))
 
 # REVISORES -> Se asignan especialidades a algunos usuarios, de forma que sean revisores
+print('ASIGNANDO ESPECIALIDADES (REVISORES)')
 usuarios_especialidades = [] #(rut,[esp_1,esp_2,...])
 for rut,_,_ in usuarios:
     especialidades = set()
@@ -82,7 +85,8 @@ for rut,_,_ in usuarios:
     
     usuarios_especialidades.append((rut,especialidades))
 
-# ARTICULOS -> Se crean articulos, asignando autores, autor de contacto, revisores y topicos. Si en 3 segundos no se encuentran los 3 revisores, se dejan los que logro asignar.
+# ARTICULOS -> Se crean articulos, asignando autores, autor de contacto, revisores y topicos. Si en 3 segundos no se encuentran los 3 revisores, se dejan los que logro asignar. Si un artculo no logra encontrar los suficientes revisores, en la terminal se printea ('skip...'), por lo que si esto ocurre, ya sabes que habra articulos con menos de 3 revisores. Mientras mas grande la poblacion, mas dificil es que este skipeo ocurra.
+print('CREANDO ARTICULOS (ESTE TARDA MAS)')
 for _ in range(1000):
     titulo = faker.sentence(nb_words=6)
     resumen = faker.text(max_nb_chars=150)
@@ -123,6 +127,7 @@ for _ in range(1000):
             db.execute("INSERT INTO Articulos_Revisores (id_articulo,rut_revisor) VALUES (%s,%s)", (id_articulo, revisor[0]))
             revisores_articulo.append(revisor)
 
+print('LISTO :)')
 coneccion.commit()
 
 db.close()
