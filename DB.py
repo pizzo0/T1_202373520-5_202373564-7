@@ -61,10 +61,14 @@ for _ in range(NUM_USUARIOS):
     db.execute('INSERT INTO Usuarios (rut,nombre,email) VALUES (%s,%s,%s)', (rut, nombre, email))
 
 # TOPICOS
+
+lista_posibles_topicos = ["Desarrollo web", "Ingeniería de datos", "Ciberseguridad", "Bases de datos", "Redes informáticas", "Gestión ágil", "Computación en la nube", "Análisis de datos", "Desarrollo móvil", "Inteligencia artificial", "DevOps", "Gestión de TI", "Blockchain", "Backend", "Frontend", "Interfaz de usuario", "Pruebas de software", "Soporte técnico", "Big data", "Sistemas embebidos", "Algoritmos", "Seguridad web", "Arquitectura de software", "Automatización", "Despliegue continuo", "Realidad aumentada", "Machine learning", "Análisis predictivo", "Cloud computing", "Scrum", "Gestión de proyectos", "Diseño UX", "Microservicios", "Infraestructura digital", "Tecnologías móviles", "Consultoría IT", "Tecnología educativa", "Sistemas operativos", "Gobierno de datos", "Documentación técnica", "Administración de redes", "Visualización de datos", "Integración de sistemas", "Gestión de versiones", "Soporte de aplicaciones", "Cómputo distribuido", "Redes neuronales", "Innovación digital", "Control de calidad"]
+random.shuffle(lista_posibles_topicos)
+
 print('CREANDO TOPICOS')
 topicos = [] #(id,nombre)
-for _ in range(NUM_TOPICOS):
-    nombre = faker.unique.job()
+for _ in range(NUM_TOPICOS):    
+    nombre = lista_posibles_topicos.pop()
     
     db.execute('INSERT INTO Topicos (nombre) VALUES (%s) RETURNING id', (nombre,))
     id = db.fetchone()[0]
@@ -86,9 +90,11 @@ for rut,_,_ in usuarios:
     usuarios_especialidades.append((rut,especialidades))
 
 # ARTICULOS -> Se crean articulos, asignando autores, autor de contacto, revisores y topicos. Si en 3 segundos no se encuentran los 3 revisores, se dejan los que logro asignar. Si un artculo no logra encontrar los suficientes revisores, en la terminal se printea ('skip...'), por lo que si esto ocurre, ya sabes que habra articulos con menos de 3 revisores. Mientras mas grande la poblacion, mas dificil es que este skipeo ocurra.
+lista_palabras = [ "software", "gestión", "algoritmo", "datos", "tecnología", "información", "programa", "aplicación", "sistema", "procesamiento", "interfaz", "red", "usuario", "plataforma", "virtual", "automatización", "seguridad", "inteligencia", "artificial", "servidor", "código", "desarrollo", "digital", "web", "computación", "modelo", "infraestructura", "proyecto", "ingeniería", "hardware", "actualización", "conectividad", "nube", "depuración", "sintaxis", "función", "entorno", "módulo", "protocolo", "estructura", "lenguaje", "base", "datos", "sistema", "operativo", "dispositivo", "análisis", "rendimiento", "mejora", "colaboración", "innovación", "gestión", "proceso","operativo","ordenador","computador","oficial"]
+
 print('CREANDO ARTICULOS (ESTE TARDA MAS)')
 for _ in range(1000):
-    titulo = faker.sentence(nb_words=6)
+    titulo = " ".join(random.choices(lista_palabras, k=6)).capitalize()
     resumen = faker.text(max_nb_chars=150)
     
     autores_articulo = random.sample(usuarios, random.randint(1,NUM_MAX_AUTORES))
